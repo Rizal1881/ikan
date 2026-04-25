@@ -17,20 +17,32 @@ class IkansTable
             ->columns([
                 TextColumn::make('nama_ikan')
                     ->searchable(),
+
+                // 🔥 TAMBAHAN RELASI AQUARIUM
+                TextColumn::make('aquarium.nama_aquarium')
+                    ->label('Aquarium')
+                    ->badge()
+                    ->color('primary'),
+
                 TextColumn::make('jenis')
-                    ->badge(),
+                    ->badge()
+                    ->color(fn ($state) => $state === 'air laut' ? 'info' : 'success'),
+
                 TextColumn::make('jumlah')
                     ->numeric()
                     ->sortable(),
+
                 ImageColumn::make('gambar')
                     ->label('Gambar')
                     ->getStateUsing(fn ($record) => asset('ikan/' . basename($record->gambar)))
                     ->square()
                     ->size(60),
+
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()

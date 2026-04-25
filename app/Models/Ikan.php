@@ -13,4 +13,8 @@ class Ikan extends Model
         'deskripsi',
         'gambar',
     ];
+    public function aquarium()
+    {
+        return $this->belongsTo(\App\Models\Aquarium::class);
+    }
 }
