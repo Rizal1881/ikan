@@ -46,14 +46,35 @@ class IkanForm
                 ->label('Deskripsi'),
 
             FileUpload::make('gambar')
-                ->label('Gambar')
-                ->image()
-                ->directory('ikan')
-                ->imagePreviewHeight('150')
-                ->required()
-                ->validationMessages([
-                    'required' => 'Gambar wajib diupload!',
-                ]),
+                        ->label('Gambar')
+                        ->image()
+                        ->directory('ikan')
+                        ->disk('public')
+                        ->visibility('public')
+                        ->getUploadedFileNameForStorageUsing(function ($file) {
+                            return time() . '_' . $file->getClientOriginalName();
+                        })
+                        ->saveUploadedFileUsing(function ($file) {
+    $filename = time() . '.' . $file->getClientOriginalExtension();
+
+                            // buat folder kalau belum ada
+                            if (!file_exists(public_path('ikan'))) {
+                                mkdir(public_path('ikan'), 0777, true);
+                            }
+
+                            // simpan ke storage dulu
+                            $path = $file->storeAs('ikan', $filename, 'public');
+
+                            // copy ke public/ikan
+                            copy(
+                                storage_path('app/public/' . $path),
+                                public_path('ikan/' . $filename)
+                            );
+
+                            return 'ikan/' . $filename;
+                        })
+                        ->imagePreviewHeight('150')
+                        ->required()
         ]);
     }
 }

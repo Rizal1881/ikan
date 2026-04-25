@@ -24,6 +24,7 @@ class IkansTable
                     ->sortable(),
                 ImageColumn::make('gambar')
                     ->label('Gambar')
+                    ->getStateUsing(fn ($record) => asset('ikan/' . basename($record->gambar)))
                     ->square()
                     ->size(60),
                 TextColumn::make('created_at')
